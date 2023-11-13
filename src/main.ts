@@ -6,7 +6,7 @@ document.getElementById('buttonABC')!.addEventListener('click',abcSorrend);
 document.getElementById('buttonLegdragabbElol')!.addEventListener('click',legDragabbElol);
 document.getElementById('buttonLeirasbanKereses')!.addEventListener('click',leirasbanKereses);
 document.getElementById('buttonAjanlat')!.addEventListener('click',ajanlat);
-document.getElementById('buttonKattegoriak')!.addEventListener('click',kategoriakLetrehozasa);
+document.getElementById('buttonKategoriak')!.addEventListener('click',kategoriakLetrehozasa);
 
 async function betoltes()
 {
@@ -58,9 +58,10 @@ async function ajanlat()
   adatMegjelenites(szurt);
 }
 
+let kategoriak : string[] = [];
+
 async function kategoriakLetrehozasa()
 {
-  let kategoriak : string[];
   let tomb = await betoltes();
   tomb.products.forEach(element => {
     if(!kategoriak.includes(element.category))
@@ -68,10 +69,24 @@ async function kategoriakLetrehozasa()
       kategoriak.push(element.category);
     }
   });
+  buttonLetrehozas();
+}
 
-  //kategoriak.forEach(element => {
-    
-  //});
+async function buttonLetrehozas()
+{
+  let tomb = await betoltes();
+  kategoriak.forEach(element => {
+    const kategoriakDiv = document.getElementById('kategoriak')!;
+    const button = document.createElement('button');
+    button.textContent = `${element}`;
+    kategoriakDiv.appendChild(button);
+
+    button.addEventListener('click', (e) => {
+      const szurt = tomb.products.filter(termek => 
+        termek.category == button.textContent);
+      adatMegjelenites(szurt);
+    });
+  });
 }
 
 function adatMegjelenites(termekLista : Product[])
